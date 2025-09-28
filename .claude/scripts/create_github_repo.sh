@@ -13,6 +13,7 @@ PRIVATE_REPO=true
 PY_VERSION="3.12"
 STRICT=false
 BASE_DIR="${HOME}/repos"
+INSTALL_CLAUDE_CODE=false
 
 # -----------
 # Utilities
@@ -25,7 +26,7 @@ oops() { printf "${RED}[ERROR]${NC} %s\n" "$*" >&2; exit 1; }
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") <project-name> [--github] [--public] [--python X.Y] [--strict] [--base DIR]
+Usage: $(basename "$0") <project-name> [--github] [--public] [--python X.Y] [--strict] [--base DIR] [--claude-code]
 
 Options:
   --github          Create and push a GitHub repo via 'gh'
@@ -33,6 +34,7 @@ Options:
   --python X.Y      Python version to pin with uv (default ${PY_VERSION})
   --strict          Add modest ruff/mypy opinions (still reasonable)
   --base DIR        Parent directory for project (default ${BASE_DIR})
+  --claude-code     Install Claude Code dotfiles from remote repository
 EOF
 }
 
@@ -49,6 +51,7 @@ while [[ $# -gt 0 ]]; do
     --python) shift; PY_VERSION="${1:-$PY_VERSION}" ;;
     --strict) STRICT=true ;;
     --base)   shift; BASE_DIR="${1:-$BASE_DIR}" ;;
+    --claude-code) INSTALL_CLAUDE_CODE=true ;;
     -h|--help) usage; exit 0 ;;
     *) oops "Unknown option: $1" ;;
   esac
@@ -196,6 +199,24 @@ warn_unused_ignores = true
 EOF
   git add pyproject.toml
   git commit -q -m "chore: enable STRICT profile (ruff/mypy modest opinions)"
+fi
+
+# ----------------
+# Optional Claude Code
+# ----------------
+if $INSTALL_CLAUDE_CODE; then
+  log "Installing Claude Code dotfiles..."
+  # Find the install script relative to this script's location
+  SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  INSTALL_SCRIPT="$SCRIPT_DIR/install.sh"
+
+  if [[ -f "$INSTALL_SCRIPT" ]]; then
+    "$INSTALL_SCRIPT" "$PROJECT_DIR" || oops "Failed to install Claude Code dotfiles"
+    git add .
+    git commit -q -m "feat: add Claude Code dotfiles configuration"
+  else
+    oops "Claude Code install script not found at: $INSTALL_SCRIPT"
+  fi
 fi
 
 # ----------------
