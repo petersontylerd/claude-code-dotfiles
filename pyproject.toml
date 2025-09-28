@@ -1,10 +1,12 @@
 [project]
-name = "claude-code-dotfiles"
+name = "codex-git-ops"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "pyyaml>=6.0.0",
+]
 
 [dependency-groups]
 dev = [
@@ -12,7 +14,7 @@ dev = [
     "mypy>=1.18.2",
     "pip-audit>=2.9.0",
     "pre-commit>=4.3.0",
-    "ruff>=0.13.2",
+    "ruff>=0.13.1",
 ]
 
 [tool.ruff]

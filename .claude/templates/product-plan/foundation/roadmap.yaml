@@ -1,0 +1,63 @@
+# schema_version: 2.0.0
+metadata:
+  product_name: ""              # must match brainstorm
+  based_on_artifacts:
+    - "brainstorm.yaml"
+    - "vision.yaml"
+    - "strategy.yaml"
+  schema_version: "1.0.0"
+
+time_horizons:
+  short_term:
+    goals: []                   # strategic goals for this horizon
+    themes: []                  # strategic themes for this horizon
+    milestones:                 # at least one required
+      - description: ""          # what is delivered
+        key_outcome: ""          # impact achieved (e.g., adoption validated)
+        dependencies: []         # descriptions of dependencies (optional)
+        timing_rationale: ""     # market timing and competitive considerations
+        risk_of_delay: ""        # impact if this milestone is delayed
+
+  mid_term:
+    goals: []
+    themes: []
+    milestones:
+      - description: ""
+        key_outcome: ""
+        dependencies: []
+        timing_rationale: ""
+        risk_of_delay: ""
+
+  long_term:
+    goals: []
+    themes: []
+    milestones:
+      - description: ""
+        key_outcome: ""
+        dependencies: []
+        timing_rationale: ""
+        risk_of_delay: ""
+
+risks_assumptions:
+  - description: ""
+    type: ""                    # sequencing
+    mitigation: ""
+    owner: ""
+
+confidence_assessment:
+  - section: ""           # e.g., "short_term_milestones", "mid_term_milestones", "dependencies"
+    confidence: ""         # high | medium | low
+    rationale: ""          # why low confidence
+    follow_up_action: ""   # specific next step to increase confidence
+
+progressive_decisions:
+  - decision: ""           # what was decided with incomplete info
+    assumption: ""         # what we assumed
+    confidence: ""         # high | medium | low
+    trigger_for_revisit: "" # what would make us reconsider
+
+open_questions:
+  - question: ""
+    blocking: false        # does this block forward progress?
+    confidence_impact: ""  # which sections this affects
+    workaround: ""         # how to proceed if unresolved

@@ -1,0 +1,42 @@
+# schema_version: 2.0.0
+metadata:
+  product_name: ""            # must match brainstorm
+  based_on_artifact: "brainstorm.yaml"
+  schema_version: "1.0.0"
+
+vision_statement:
+  one_liner: ""               # 1-sentence inspirational vision
+  narrative: ""               # 3–5 sentence expanded vision
+  alternatives:               # optional, 2–3 framing options
+    - framing: ""             # e.g., "conservative", "ambitious"
+      statement: ""
+
+company_alignment:
+  company_mission_link: ""    # explicit tie to company mission
+  strategic_fit_notes: []     # list of ways it supports org goals
+
+strategic_pillars:
+  - name: ""                  # short label
+    description: ""           # 1–2 sentence explanation
+
+differentiation:
+  why_unique: []              # [string] high-level differentiation themes
+  metaphors: []               # [string] memorable analogies
+
+confidence_assessment:
+  - section: ""           # e.g., "vision_statement", "strategic_pillars", "differentiation"
+    confidence: ""         # high | medium | low
+    rationale: ""          # why low confidence
+    follow_up_action: ""   # specific next step to increase confidence
+    
+progressive_decisions:
+  - decision: ""           # what was decided with incomplete info
+    assumption: ""         # what we assumed
+    confidence: ""         # high | medium | low
+    trigger_for_revisit: "" # what would make us reconsider
+    
+open_questions:
+  - question: ""
+    blocking: false        # does this block forward progress?
+    confidence_impact: ""  # which sections this affects
+    workaround: ""         # how to proceed if unresolved
