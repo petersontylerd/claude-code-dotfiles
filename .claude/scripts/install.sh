@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ABOUTME: Downloads Claude Code dotfiles from remote GitHub repository and installs them to specified project directory
-# Used by create_github_repo.sh when --claude-code flag is provided
+# Used by local create_github_repo.sh when --claude-code flag is provided
 
 set -euo pipefail
 
