@@ -8,7 +8,7 @@ set -euo pipefail
 # Configuration
 # ---------------------------
 REMOTE_REPO="https://github.com/petersontylerd/claude-code-dotfiles"
-REMOTE_BRANCH="master"
+REMOTE_BRANCH="main"
 
 # -----------
 # Utilities
@@ -47,7 +47,8 @@ DEST_DIR="$1"
 # ----------------
 # Prereq checks
 # ----------------
-command -v git >/dev/null || oops "git not found."
+command -v curl >/dev/null || oops "curl not found."
+command -v tar >/dev/null || oops "tar not found."
 
 # ----------------
 # Validate destination
@@ -74,12 +75,11 @@ trap cleanup EXIT
 log "Downloading Claude Code dotfiles from $REMOTE_REPO"
 cd "$TEMP_DIR"
 
-# Clone with sparse checkout to only get the files we need
-git clone --filter=blob:none --sparse "$REMOTE_REPO" claude-code-dotfiles || oops "Failed to clone repository"
-cd claude-code-dotfiles
-git sparse-checkout set .claude CLAUDE.md .mcp.json || oops "Failed to configure sparse checkout"
+# Download repository as tarball
+curl -L "$REMOTE_REPO/archive/refs/heads/$REMOTE_BRANCH.tar.gz" -o claude-dotfiles.tar.gz || oops "Failed to download repository"
+tar -xzf claude-dotfiles.tar.gz || oops "Failed to extract repository"
 
-SOURCE_DIR="$TEMP_DIR/claude-code-dotfiles"
+SOURCE_DIR="$TEMP_DIR/claude-code-dotfiles-$REMOTE_BRANCH"
 
 # ----------------
 # Verify source files exist
