@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+.uv/
+.coverage
+.pytest_cache/
+
+# Node / Next.js
+node_modules/
+dist/
+.next/
+.out/
+
+# Editors / OS
+.vscode/
+.DS_Store
