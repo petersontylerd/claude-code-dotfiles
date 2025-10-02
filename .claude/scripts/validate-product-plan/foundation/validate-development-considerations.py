@@ -7,9 +7,9 @@ Ensures the development-considerations artifact follows the expected structure a
 
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+import yaml
 
 # Color codes for output
 GREEN = "\033[92m"
@@ -19,11 +19,11 @@ BLUE = "\033[94m"
 RESET = "\033[0m"
 
 
-def load_yaml_file(file_path: Path) -> Tuple[Dict[str, Any], List[str]]:
+def load_yaml_file(file_path: Path) -> tuple[dict[str, Any], list[str]]:
     """Load and parse a YAML file, returning content and any errors."""
-    errors: List[str] = []
+    errors: list[str] = []
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = yaml.safe_load(f)
             return content or {}, errors
     except FileNotFoundError:
@@ -38,10 +38,10 @@ def load_yaml_file(file_path: Path) -> Tuple[Dict[str, Any], List[str]]:
 
 
 def validate_structure(
-    artifact: Dict[str, Any], template: Dict[str, Any], path: str = ""
-) -> List[str]:
+    artifact: dict[str, Any], template: dict[str, Any], path: str = ""
+) -> list[str]:
     """Recursively validate artifact structure against template."""
-    errors: List[str] = []
+    errors: list[str] = []
 
     for key, template_value in template.items():
         current_path = f"{path}.{key}" if path else key

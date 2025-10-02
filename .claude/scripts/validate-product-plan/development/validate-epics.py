@@ -8,9 +8,9 @@ Ensures epic artifacts follow expected structure and have consistent ID naming
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+import yaml
 
 # Color codes for output
 GREEN = "\033[92m"
@@ -20,11 +20,11 @@ BLUE = "\033[94m"
 RESET = "\033[0m"
 
 
-def load_yaml_file(file_path: Path) -> Tuple[Dict[str, Any], List[str]]:
+def load_yaml_file(file_path: Path) -> tuple[dict[str, Any], list[str]]:
     """Load and parse a YAML file, returning content and any errors."""
-    errors: List[str] = []
+    errors: list[str] = []
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = yaml.safe_load(f)
             return content or {}, errors
     except FileNotFoundError:
@@ -39,10 +39,10 @@ def load_yaml_file(file_path: Path) -> Tuple[Dict[str, Any], List[str]]:
 
 
 def validate_structure(
-    artifact: Dict[str, Any], template: Dict[str, Any], path: str = ""
-) -> List[str]:
+    artifact: dict[str, Any], template: dict[str, Any], path: str = ""
+) -> list[str]:
     """Recursively validate artifact structure against template."""
-    errors: List[str] = []
+    errors: list[str] = []
 
     for key, template_value in template.items():
         current_path = f"{path}.{key}" if path else key
@@ -80,10 +80,10 @@ def validate_structure(
 
 
 def validate_epic_id_consistency(
-    epic_file: Path, artifact: Dict[str, Any]
-) -> List[str]:
+    epic_file: Path, artifact: dict[str, Any]
+) -> list[str]:
     """Validate epic ID consistency between filename, directory, and content."""
-    errors: List[str] = []
+    errors: list[str] = []
 
     # Extract epic ID from directory name
     epic_dir = epic_file.parent.name
@@ -112,7 +112,7 @@ def validate_epic_id_consistency(
     return errors
 
 
-def find_epic_files() -> List[Path]:
+def find_epic_files() -> list[Path]:
     """Find all epic YAML files in the product-plan structure."""
     script_dir = Path(__file__).parent.parent.parent.parent
     product_plan_dir = script_dir / "product-plan" / "development"
@@ -152,7 +152,7 @@ def validate_epics() -> bool:
 
     print(f"Found {len(epic_files)} epic file(s)")
 
-    all_errors: List[str] = []
+    all_errors: list[str] = []
 
     # Validate each epic file
     for epic_file in epic_files:

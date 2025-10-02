@@ -8,9 +8,9 @@ Ensures user story artifacts follow expected structure and have consistent ID na
 import re
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
-import yaml  # type: ignore[import-untyped]
+import yaml
 
 # Color codes for output
 GREEN = "\033[92m"
@@ -20,11 +20,11 @@ BLUE = "\033[94m"
 RESET = "\033[0m"
 
 
-def load_yaml_file(file_path: Path) -> Tuple[Dict[str, Any], List[str]]:
+def load_yaml_file(file_path: Path) -> tuple[dict[str, Any], list[str]]:
     """Load and parse a YAML file, returning content and any errors."""
-    errors: List[str] = []
+    errors: list[str] = []
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             content = yaml.safe_load(f)
             return content or {}, errors
     except FileNotFoundError:
@@ -39,10 +39,10 @@ def load_yaml_file(file_path: Path) -> Tuple[Dict[str, Any], List[str]]:
 
 
 def validate_structure(
-    artifact: Dict[str, Any], template: Dict[str, Any], path: str = ""
-) -> List[str]:
+    artifact: dict[str, Any], template: dict[str, Any], path: str = ""
+) -> list[str]:
     """Recursively validate artifact structure against template."""
-    errors: List[str] = []
+    errors: list[str] = []
 
     for key, template_value in template.items():
         current_path = f"{path}.{key}" if path else key
@@ -80,10 +80,10 @@ def validate_structure(
 
 
 def validate_user_story_id_consistency(
-    story_file: Path, artifact: Dict[str, Any]
-) -> List[str]:
+    story_file: Path, artifact: dict[str, Any]
+) -> list[str]:
     """Validate user story ID consistency between filename, directory, and content."""
-    errors: List[str] = []
+    errors: list[str] = []
 
     # Extract epic, feature, and user story IDs from filename
     story_match = re.search(r"user-story-(E\d+)-(F\d+)-(US\d+)", story_file.name)
@@ -123,12 +123,12 @@ def validate_user_story_id_consistency(
     return errors
 
 
-def find_user_story_files() -> List[Path]:
+def find_user_story_files() -> list[Path]:
     """Find all user story YAML files in the product-plan structure."""
     script_dir = Path(__file__).parent.parent.parent.parent
     product_plan_dir = script_dir / "product-plan" / "development"
 
-    story_files: List[Path] = []
+    story_files: list[Path] = []
     for epic_dir in product_plan_dir.glob("epic-E*"):
         if epic_dir.is_dir():
             epic_id = epic_dir.name.split("-")[1]
@@ -174,7 +174,7 @@ def validate_user_stories() -> bool:
 
     print(f"Found {len(story_files)} user story file(s)")
 
-    all_errors: List[str] = []
+    all_errors: list[str] = []
 
     # Validate each user story file
     for story_file in story_files:

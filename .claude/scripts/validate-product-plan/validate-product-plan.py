@@ -10,7 +10,6 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, Tuple
 
 # Color codes for output
 GREEN = "\033[92m"
@@ -20,7 +19,7 @@ BLUE = "\033[94m"
 RESET = "\033[0m"
 
 
-def run_validation_script(script_path: Path) -> Tuple[bool, str]:
+def run_validation_script(script_path: Path) -> tuple[bool, str]:
     """Run a validation script and return success status and output."""
     try:
         result = subprocess.run(
@@ -33,7 +32,7 @@ def run_validation_script(script_path: Path) -> Tuple[bool, str]:
         return False, f"Error running script: {e}"
 
 
-def run_foundation_validation() -> Dict[str, Tuple[bool, str]]:
+def run_foundation_validation() -> dict[str, tuple[bool, str]]:
     """Run all foundation validation scripts."""
     script_dir = Path(__file__).parent
     foundation_dir = script_dir / "foundation"
@@ -61,7 +60,7 @@ def run_foundation_validation() -> Dict[str, Tuple[bool, str]]:
     return results
 
 
-def run_development_validation() -> Dict[str, Tuple[bool, str]]:
+def run_development_validation() -> dict[str, tuple[bool, str]]:
     """Run all development validation scripts."""
     script_dir = Path(__file__).parent
     development_dir = script_dir / "development"
@@ -84,7 +83,7 @@ def run_development_validation() -> Dict[str, Tuple[bool, str]]:
     return results
 
 
-def print_results(results: Dict[str, Tuple[bool, str]], verbose: bool = False) -> int:
+def print_results(results: dict[str, tuple[bool, str]], verbose: bool = False) -> int:
     """Print validation results and return number of failures."""
     failures = 0
 
@@ -107,9 +106,9 @@ def print_results(results: Dict[str, Tuple[bool, str]], verbose: bool = False) -
 
 
 def generate_json_report(
-    foundation_results: Dict[str, Tuple[bool, str]],
-    development_results: Dict[str, Tuple[bool, str]],
-) -> Dict:
+    foundation_results: dict[str, tuple[bool, str]],
+    development_results: dict[str, tuple[bool, str]],
+) -> dict:
     """Generate JSON report of validation results."""
 
     def format_results(results):
