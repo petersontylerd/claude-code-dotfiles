@@ -5,11 +5,11 @@ ABOUTME: Master orchestration script for validating all product plan artifacts
 Provides unified interface to run all validation scripts with filtering options
 """
 
-import sys
-import subprocess
-from pathlib import Path
 import argparse
 import json
+import subprocess
+import sys
+from pathlib import Path
 from typing import Dict, Tuple
 
 # Color codes for output

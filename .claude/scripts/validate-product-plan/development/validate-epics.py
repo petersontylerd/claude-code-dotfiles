@@ -5,11 +5,12 @@ ABOUTME: Validates all epic artifacts against the epic template schema
 Ensures epic artifacts follow expected structure and have consistent ID naming
 """
 
-import sys
-import yaml
-from pathlib import Path
-from typing import Dict, List, Any, Tuple
 import re
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Tuple
+
+import yaml  # type: ignore[import-untyped]
 
 # Color codes for output
 GREEN = "\033[92m"

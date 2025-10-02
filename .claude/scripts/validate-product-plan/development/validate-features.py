@@ -5,11 +5,12 @@ ABOUTME: Validates all feature artifacts against the feature template schema
 Ensures feature artifacts follow expected structure and have consistent ID naming with parent epics
 """
 
-import sys
-import yaml
-from pathlib import Path
-from typing import Dict, List, Any, Tuple
 import re
+import sys
+from pathlib import Path
+from typing import Any, Dict, List, Tuple
+
+import yaml  # type: ignore[import-untyped]
 
 # Color codes for output
 GREEN = "\033[92m"
@@ -127,7 +128,7 @@ def find_feature_files() -> List[Path]:
     script_dir = Path(__file__).parent.parent.parent.parent
     product_plan_dir = script_dir / "product-plan" / "development"
 
-    feature_files = []
+    feature_files: List[Path] = []
     for epic_dir in product_plan_dir.glob("epic-E*"):
         if epic_dir.is_dir():
             features_dir = epic_dir / f"features-{epic_dir.name.split('-')[1]}"

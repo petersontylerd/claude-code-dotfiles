@@ -6,9 +6,10 @@ Ensures the metrics artifact follows the expected structure and contains require
 """
 
 import sys
-import yaml
 from pathlib import Path
-from typing import Dict, List, Any, Tuple
+from typing import Any, Dict, List, Tuple
+
+import yaml  # type: ignore[import-untyped]
 
 # Color codes for output
 GREEN = "\033[92m"
