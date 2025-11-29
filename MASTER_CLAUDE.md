@@ -1,4 +1,4 @@
-# MASTER_AGENTS.md
+# MASTER_CLAUDE.md
 Guidance for Claude Code - an experienced, pragmatic software engineer. Don't over-engineer when simple solutions work.
 
 **Rule #1**: Get explicit permission from me for ANY rule exception. BREAKING RULES IS FAILURE.
@@ -38,19 +38,17 @@ Guidance for Claude Code - an experienced, pragmatic software engineer. Don't ov
 ## Naming and Comments
 - Names MUST describe what code does NOW, not implementation or history
 - NEVER use temporal context (new, old, legacy, improved, enhanced)
-- All files MUST start with 2-line "ABOUTME: " comment explaining purpose, except if adding the 2-line "ABOUTME: " breaks file syntax.
 - Comments describe current state only - no historical context
 - NEVER remove comments unless provably false
 - Follow language-specific naming conventions (snake_case, camelCase, PascalCase)
 
 ## Testing Requirements
 **NO EXCEPTIONS**: ALL projects MUST have unit, integration, AND end-to-end tests
-- Tests MUST comprehensively cover ALL functionality
-- NEVER mock what you're testing - use real data and APIs
+- Critical functionality must be covered at appropriate levels; for micro changes (docs, config tweaks, single-line fixes) targeted unit/regression tests are acceptable with a follow-up card to extend coverage if needed.
+- Prefer real data and APIs; when a real service is unavailable, flaky, or paid-only, use minimal contract/snapshot fakes and document a real-environment verification step.
 - NEVER ignore test output - logs contain CRITICAL information
 - Test failures are YOUR responsibility
 - Use language-standard test frameworks and assertion libraries
-- See @ ./.Claude Code/docs/using-tdd.md for TDD methodology
 
 ### TDD Process (MANDATORY):
 1. Write failing test against real environment
@@ -98,14 +96,16 @@ ALWAYS find root cause - NEVER fix symptoms or add workarounds
 - NEVER use git add -A without git status first
 
 ### Pre-commit Hooks
-**FORBIDDEN FLAGS**: --no-verify, --no-hooks, --no-pre-commit-hook
+**FORBIDDEN FLAGS**: --no-verify, --no-hooks, --no-pre-commit-hook, unless a hook is demonstrably broken or unrelated; log the issue, note the bypass in the commit description, and schedule a follow-up to fix the hook and rerun checks post-merge.
 
 When hooks fail:
 1. Read complete error output
 2. Identify which tool failed and why
 3. Explain fix addressing root cause
 4. Apply fix and re-run
-5. Only commit after all pass
+5. Only commit after all pass (or document an approved, temporary bypass as above)
+
+For urgent hotfixes, a short-lived branch may ship quickly with a documented plan to rerun full hooks/tests immediately after release.
 
 NEVER bypass quality checks under pressure. Quality > Speed.
 
@@ -115,19 +115,18 @@ When using /compact, focus on recent conversation and significant tasks. Aggress
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Shared reference docs are in `~/.Claude Code/docs`.
 - Top-level configuration files such as `pyproject.toml`, `uv.lock`, and `config.toml` define the Python toolchain—update these instead of hand-editing generated lock data. Keep any experimental materials in clearly labeled subfolders; the root should remain limited to project-wide configuration.
 
 ## Build, Test, and Development Commands
-- `uv sync` — install or update the Python environment defined in `pyproject.toml` and `uv.lock`.
-- `uv run python scripts/dev_task.py` — preferred pattern for running repository Python scripts; replace the path with the actual entry point you need.
-- `uv run pre-commit run --all-files` — format, lint, and type-check before pushing; mirrors the hook configuration.
+- `UV_CACHE_DIR=.uv-cache uv sync` — install or update the Python environment defined in `pyproject.toml` and `uv.lock`.
+- `UV_CACHE_DIR=.uv-cache uv run python scripts/dev_task.py` — preferred pattern for running repository Python scripts; replace the path with the actual entry point you need.
+- `UV_CACHE_DIR=.uv-cache uv run pre-commit run --all-files` — format, lint, and type-check before pushing; mirrors the hook configuration.
 
 ## Coding Style & Naming Conventions
 Target Python 3.X with four-space indentation, meaningful snake_case identifiers, and descriptive YAML keys. Let `ruff format` manage layout and `ruff check` enforce lint rules; do not hand-tune style conflicts. Type hints should cover public helpers, with `mypy` kept clean. 
 
 ## Testing Guidelines
-Adopt `pytest` for any executable Python modules you add. Place tests under `tests/` with names that mirror the module under test, e.g., `tests/test_product_plan.py`. Execute `uv run pytest` locally and require meaningful fixtures or sample YAML to exercise parsing logic. Aim for high-value assertions over blanket coverage, but flag regressions with focused regression cases.
+Adopt `pytest` for any executable Python modules you add. Place tests under `tests/` with names that mirror the module under test, e.g., `tests/test_product_plan.py`. Execute `UV_CACHE_DIR=.uv-cache uv run pytest` locally and require meaningful fixtures or sample YAML to exercise parsing logic. Aim for high-value assertions over blanket coverage, but flag regressions with focused regression cases.
 
 ## Commit & Pull Request Guidelines
 Write imperative, present-tense commit subjects (~60 characters) and bundle related edits only. Pull requests should summarize intent, list test commands run, and attach before/after snippets for modified YAML or generated artifacts. Request review once CI-style checks (`pre-commit`, `pytest`, security scans) pass locally.
@@ -135,7 +134,7 @@ Write imperative, present-tense commit subjects (~60 characters) and bundle rela
 # Python Development Standards
 
 ## Environment Setup
-- **Python Version**: >=3.12 (use latest stable)
+- **Python Version**: >=3.12
 - **Package Manager**: uv required. NEVER use pip, pip with venv, or poetry
 - **Dependency Management**: Use pyproject.toml, lock dependencies with uv.lock
 
@@ -146,13 +145,13 @@ Write imperative, present-tense commit subjects (~60 characters) and bundle rela
 
 ## Essential Commands
 ```bash
-uv sync --dev              # Install dependencies
-uv run python -m app.main  # Run application
-uv run pytest             # Test
-uv run ruff format .      # Format code
-uv run ruff check .       # Lint
-uv run ruff check --fix . # Lint and auto-fix
-uv run mypy src/          # Type check
+UV_CACHE_DIR=.uv-cache uv sync --dev              # Install dependencies
+UV_CACHE_DIR=.uv-cache uv run python -m app.main  # Run application
+UV_CACHE_DIR=.uv-cache uv run pytest             # Test
+UV_CACHE_DIR=.uv-cache uv run ruff format .      # Format code
+UV_CACHE_DIR=.uv-cache uv run ruff check .       # Lint
+UV_CACHE_DIR=.uv-cache uv run ruff check --fix . # Lint and auto-fix
+UV_CACHE_DIR=.uv-cache uv run mypy src/          # Type check
 ```
 
 ## Python-Specific Standards
@@ -390,7 +389,7 @@ pub fn add(a: i32, b: i32) -> i32 {
 - **100% Coverage Obsession**: High coverage is good, but quality matters more
 
 ## Real Environment Testing
-- NEVER mock the system under test
+- Prefer exercising the real system under test; when the real dependency is unavailable, flaky, or paid-only, use the smallest contract/snapshot fake possible and schedule a real-environment verification.
 - Use real databases (in-memory or containerized)
 - Use real message queues (RabbitMQ, Redis in test mode)
 - Use staging/sandbox APIs for external services

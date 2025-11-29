@@ -1,10 +1,10 @@
 {
   "mcpServers": {
     "sequential-thinking": {
-      "command": "npx",
+      "command": "bash",
       "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
+        "-lc",
+        "NPM_CONFIG_CACHE=/home/ubuntu/repos/project_needle/.npm-cache npx -y @modelcontextprotocol/server-sequential-thinking"
       ]
     },
     "context7": {
@@ -18,7 +18,7 @@
       ],
       "env": {}
     },
-   "serena": {
+    "serena": {
       "command": "uvx",
       "args": [
         "--from",
