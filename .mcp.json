@@ -7,33 +7,6 @@
         "@modelcontextprotocol/server-sequential-thinking"
       ]
     },
-    "puppeteer": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-puppeteer"
-      ],
-      "env": {}
-    },
-    "memory": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-memory"
-      ],
-      "env": {
-        "MEMORY_FILE_PATH": "/home/ubuntu/repos/claude-code-dotfiles/.claude/memory.json"
-      }
-    },
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "/home/ubuntu/repos/claude-code-dotfiles/"
-      ]
-    },
     "context7": {
       "type": "stdio",
       "command": "npx",
@@ -45,18 +18,7 @@
       ],
       "env": {}
     },
-    "@magicuidesign/mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@magicuidesign/mcp@latest"
-      ]
-    },
-    "figma": {
-      "type": "http",
-      "url": "https://mcp.figma.com/mcp"
-    },
-    "serena": {
+   "serena": {
       "command": "uvx",
       "args": [
         "--from",

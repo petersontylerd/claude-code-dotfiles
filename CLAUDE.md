@@ -1,117 +1,205 @@
 # CLAUDE.md
-Guidance for Claude Code - an experienced, pragmatic software engineer. Don't over-engineer when simple solutions work.
 
-**Rule #1**: Get explicit permission from me for ANY rule exception. BREAKING RULES IS FAILURE.
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Working Together
-- NEVER be a sycophant with phrases like "You're absolutely right!"
-- NEVER lie or be agreeable just to be nice - I need honest technical judgment
-- Speak up immediately when uncertain or when you disagree (cite technical reasons)
-- ALWAYS ask for clarification rather than making assumptions
-- If having trouble, STOP and ask for help
+## Overview
 
-## Development Philosophy
-**Core Principles**: Simplicity, Readability, Performance, Maintainability, Testability, Extensibility, Focus, Build Iteratively
-- Prefer simple, clean solutions over clever ones
-- Good naming is critical - spell out names fully, no abbreviations
-- Make smallest reasonable changes; ask permission before reimplementing from scratch
-- Reduce code duplication even if refactoring takes effort
-- Match existing code style for consistency
-- NEVER throw away implementations without EXPLICIT permission
+This repository is a comprehensive dotfiles and tools collection for Claude Code providing:
+- **Product Planning System**: YAML-based artifact templates with validation and slash commands
+- **Checklist Workflow**: Structured initiative execution (plan → checklist → execute → verify)
+- **Agent Definitions**: 15+ specialized AI agent prompts for domain-specific work
+- **Development Standards**: Comprehensive MASTER_CLAUDE.md with language-specific best practices
+- **MCP Configuration**: Sequential thinking, context7 documentation lookup, and serena semantic tools
+- **Validation Infrastructure**: Python scripts for schema validation with JSON reporting
 
-## Language-Specific Guidance
-Refer to language docs for ecosystem-specific standards:
-- @ ./.claude/docs/using-python.md
-- @ ./.claude/docs/using-typescript.md
-- @ ./.claude/docs/using-node.md
-- @ ./.claude/docs/using-react.md
-- @ ./.claude/docs/using-rust.md
-- @ ./.claude/docs/using-tdd.md
-- @ ./.claude/docs/using-source-control.md
+## Build, Test, and Development Commands
 
-## Coding Best Practices
-- Use early returns, descriptive names, constants over functions, DRY principles
-- Prefer functional, immutable approaches when not verbose
-- Create staging/sandbox environments for testing - use real APIs, never mocks
-- Balance file organization with simplicity
-- Use language-appropriate package managers, formatters, linters, and type checkers
-- Follow ecosystem conventions and idiomatic patterns for each language
+### Environment Setup
+```bash
+uv sync --dev              # Install dependencies with development tools
+```
 
-## Naming and Comments
-- Names MUST describe what code does NOW, not implementation or history
-- NEVER use temporal context (new, old, legacy, improved, enhanced)
-- All files MUST start with 2-line "ABOUTME: " comment explaining purpose
-- Comments describe current state only - no historical context
-- NEVER remove comments unless provably false
-- Follow language-specific naming conventions (snake_case, camelCase, PascalCase)
+### Code Quality (Pre-commit Hooks)
+```bash
+uv run pre-commit run --all-files      # Run all checks (format, lint, type-check, security)
+uv run ruff format .                   # Format code
+uv run ruff check .                    # Lint code
+uv run ruff check --fix .              # Lint and auto-fix
+uv run mypy .                          # Type-check with strict settings
+```
+
+### Validation Scripts
+```bash
+uv run python .claude/scripts/validate-product-plan/validate-product-plan.py  # Full validation
+uv run python .claude/scripts/validate-product-plan/foundation/validate-vision.py
+uv run python .claude/scripts/validate-product-plan/foundation/validate-strategy.py
+uv run python .claude/scripts/validate-product-plan/foundation/validate-prd.py
+uv run python .claude/scripts/validate-product-plan/foundation/validate-roadmap.py
+uv run python .claude/scripts/validate-product-plan/foundation/validate-personas.py
+uv run python .claude/scripts/validate-product-plan/foundation/validate-metrics.py
+uv run python .claude/scripts/validate-product-plan/foundation/validate-brainstorm.py
+uv run python .claude/scripts/validate-product-plan/foundation/validate-development-considerations.py
+uv run python .claude/scripts/validate-product-plan/development/validate-epics.py
+uv run python .claude/scripts/validate-product-plan/development/validate-features.py
+uv run python .claude/scripts/validate-product-plan/development/validate-user-stories.py
+```
+
+### Testing (when tests exist)
+```bash
+uv run pytest              # Run all tests
+uv run pytest -v           # Verbose output
+uv run pytest --cov        # With coverage report
+```
+
+## Repository Structure
+
+### `.claude/` - Core Dotfiles and Tooling
+- **`templates/product-plan/`**: YAML templates for foundation (vision, strategy, prd, roadmap, personas, metrics, brainstorm, development-considerations) and development (epics, features, user-stories) artifacts
+- **`commands/`**: Slash command definitions for Claude Code:
+  - `product-manager/`: Product planning commands (one per artifact)
+  - `checklist-workflow/`: Initiative execution workflow (create-plan, plan-to-checklist, session-start, execute-next-task, session-end, review-checklist, etc.)
+  - `agent-doublecheck/`: Review commands (plan-doublecheck, checklist-doublecheck, prompt-doublecheck)
+  - `generators/`: Template generators for new agents and commands
+  - `skunkworx/`: Rapid ideation commands for epics, features, user-stories
+- **`agents/`**: Domain-specific agent prompts (~15 agents including data-engineer, typescript-engineer, python-engineer, react-engineer, ml-engineer, ai-engineer, etc.)
+- **`scripts/validate-product-plan/`**: Python validation scripts for each artifact type with schema checking and JSON report generation
+- **`docs/`**: Language-specific development guides (using-python.md, using-typescript.md, using-react.md, using-tdd.md, etc.)
+- **`PRODUCTPLAN.md`**: Sequence for executing product planning workflow
+- **`settings.local.json`**: Claude Code settings (local)
+- **`memory.json`**: Memory state for Claude Code sessions
+
+### Root Configuration Files
+- **`MASTER_CLAUDE.md`**: Comprehensive development standards covering Python (>=3.12, uv, pytest, mypy, ruff), React, Node.js, TypeScript, TDD, version control, and testing philosophy
+- **`pyproject.toml`**: Project metadata, dependencies (pyyaml), and tool configuration (ruff, mypy)
+- **`.pre-commit-config.yaml`**: Git hooks for code quality (ruff format/lint pre-commit, mypy pre-commit, bandit pre-push, pip-audit pre-push)
+- **`.mcp.json`**: MCP server configuration (sequential-thinking, context7 documentation, serena semantic tools)
+- **`uv.lock`**: Locked dependency versions (managed by uv, do not edit manually)
+- **`.python-version`**: Python version specification
+
+## Architecture and Key Patterns
+
+### Product Planning Workflow
+1. Create foundation artifacts (vision → strategy → roadmap → personas → metrics → prd → development-considerations)
+2. Validate foundation artifacts with `/product-manager:product-plan-foundation-validation-check`
+3. Create development artifacts (epics → features → user-stories)
+4. Validate development artifacts with `/product-manager:product-plan-development-validation-check`
+5. Artifacts are YAML files stored in dedicated directories following the template schema
+
+### Checklist-Based Initiative Execution
+1. `/checklist-workflow:create-initiative-plan INITIATIVE_NAME=<name>` - Reads optimized prompt from `.scratchpaper/initiatives/$INITIATIVE_NAME/prompts/optimized/` and generates structured plan
+2. `/checklist-workflow:plan-to-checklist INITIATIVE_NAME=<name>` - Converts plan to actionable checklist
+3. `/checklist-workflow:session-start INITIATIVE_NAME=<name>` - Begin executing initiative
+4. `/checklist-workflow:execute-next-task FEATURE_BRANCH=<branch>` - Execute pending task
+5. `/checklist-workflow:session-end` - Close session and update checklist state
+6. `/checklist-workflow:review-checklist INITIATIVE_NAME=<name>` - Deep verification of completed work
+
+### Validation Architecture
+- Each artifact type (vision, strategy, roadmap, etc.) has a corresponding Python validation script
+- Scripts validate YAML structure against templates in `.claude/templates/product-plan/`
+- Color-coded output: GREEN (pass), RED (fail), YELLOW (warnings), BLUE (info)
+- Generates JSON reports for CI/CD integration
+- Main orchestrator: `validate-product-plan.py` runs all foundation and development validations
+
+## Code Style and Conventions
+
+### Python
+- **Version**: >=3.12
+- **Package Manager**: uv (NEVER pip or poetry)
+- **Style**: 4-space indentation, snake_case functions/variables, PascalCase classes
+- **Type Hints**: All functions must have return type hints
+- **Docstrings**: Google-style format
+- **Imports**: Organized by standard library, third-party, local imports
+- **Tools**: ruff for formatting/linting, mypy for type-checking (strict mode)
+- **YAML Handling**: Use PyYAML (yaml.safe_load for loading)
+- **File Operations**: pathlib.Path (not os.path)
+- **Shebang**: For executable scripts: `#!/usr/bin/env -S uv run python`
+- **ABOUTME Comment**: All Python files start with 2-line comment: `# ABOUTME: <purpose>\n# <additional detail>`
+
+### YAML Templates
+- Consistent indentation (2 spaces)
+- Descriptive field names (no abbreviations)
+- Include validation examples and comments
+- Follow template patterns in `.claude/templates/product-plan/`
+
+### Slash Commands
+- Markdown files in `.claude/commands/`
+- YAML frontmatter with description and argument-hint
+- Clear step-by-step instructions
+- Support both foundation and development artifact types
+
+## Pre-commit Hooks and Quality Checks
+
+The repository enforces quality standards with git pre-commit hooks:
+
+### Pre-commit Stage (blocks commit)
+- **ruff-format**: Formats Python code (replaces Black)
+- **ruff**: Lints Python code (replaces flake8, isort, etc.)
+- **mypy**: Type-checks Python with strict mode
+
+### Pre-push Stage (blocks push)
+- **bandit**: Security scanning
+- **pip-audit**: Dependency vulnerability checking
+
+Run `uv run pre-commit run --all-files` to check all files before committing.
+
+## Configuration Details
+
+### MCP Servers (.mcp.json)
+- **sequential-thinking**: Enables step-by-step reasoning in Claude Code
+- **context7**: Fetches version-specific library documentation (API keys configured)
+- **serena**: Provides semantic code tools for precise symbol-level understanding and editing
+
+### Development Dependencies (pyproject.toml)
+- **pyyaml**: YAML parsing for artifact validation
+- **bandit**: Security linting
+- **mypy**: Type checking with strict rules
+- **pip-audit**: Dependency security auditing
+- **pre-commit**: Git hook framework
+- **ruff**: Linting and formatting
+- **types-pyyaml**: Type hints for PyYAML
 
 ## Testing Requirements
-**NO EXCEPTIONS**: ALL projects MUST have unit, integration, AND end-to-end tests
-- Tests MUST comprehensively cover ALL functionality
-- NEVER mock what you're testing - use real data and APIs
-- NEVER ignore test output - logs contain CRITICAL information
-- Test failures are YOUR responsibility
-- Use language-standard test frameworks and assertion libraries
-- See @ ./.claude/docs/using-tdd.md for TDD methodology
 
-### TDD Process (MANDATORY):
-1. Write failing test against real environment
-2. Run test to confirm failure
-3. Write minimum code to pass
-4. Run full suite to confirm no regressions
-5. Refactor while keeping tests green
+Refer to MASTER_CLAUDE.md for comprehensive TDD standards. Key principles:
+- Write tests BEFORE implementation (Red-Green-Refactor)
+- Use pytest with 90%+ coverage minimum
+- Test pyramid: 70% unit, 20% integration, 10% E2E
+- Never mock the system under test - use real data and APIs
+- All test failures are development responsibility
 
-## Systematic Debugging
-ALWAYS find root cause - NEVER fix symptoms or add workarounds
+## Important Development Rules from MASTER_CLAUDE.md
 
-### Phase 1: Investigation
-- Read error messages carefully
-- Reproduce consistently
-- Check recent changes
+### Core Principles
+- Prefer simple, clean solutions over clever ones
+- Make smallest reasonable changes
+- Match existing code style for consistency
+- Use early returns and descriptive names
+- Reduce code duplication
 
-### Phase 2: Pattern Analysis
-- Find working examples in same language/framework
-- Compare against references
-- Identify differences
-- Understand dependencies
-
-### Phase 3: Hypothesis and Testing
-- Form single hypothesis
-- Test minimally
-- Verify before continuing
-- Say "I don't understand X" when stuck
-
-### Phase 4: Implementation
-- Have simplest failing test case
-- NEVER add multiple fixes at once
-- ALWAYS test after each change
-- If first fix fails, STOP and re-analyze
-
-## Version Control
+### Git Discipline
 - Use feature branches (fix/, feat/, chore/)
-- Create PRs for all changes
-- Link issues with "Fixes #123"
-- Make atomic commits: type(scope): description
-- Run language-appropriate quality checks before committing
-
-### CRITICAL Git Rules
-- If no git repo, STOP and ask permission to initialize
-- STOP and ask how to handle uncommitted changes when starting
-- Create WIP branch if no clear task branch exists
+- Atomic commits with clear messages (type(scope): description)
+- Run quality checks before committing
+- NEVER use --no-verify or bypass pre-commit hooks
 - Commit frequently throughout development
-- NEVER use git add -A without git status first
 
-### Pre-commit Hooks
-**FORBIDDEN FLAGS**: --no-verify, --no-hooks, --no-pre-commit-hook
+### Testing Philosophy
+- TDD is mandatory - no exceptions without explicit permission
+- Tests MUST comprehensively cover functionality
+- Never ignore test output - logs contain critical information
+- Test failures are YOUR responsibility
+- Use language-standard test frameworks (pytest for Python)
 
-When hooks fail:
-1. Read complete error output
-2. Identify which tool failed and why
-3. Explain fix addressing root cause
-4. Apply fix and re-run
-5. Only commit after all pass
+### When Stuck
+- STOP and ask for help before guessing
+- Read error messages carefully
+- Never add workarounds without understanding root cause
+- Speak up immediately when uncertain or disagreeing
 
-NEVER bypass quality checks under pressure. Quality > Speed.
+## References
 
-## Summarization
-When using /compact, focus on recent conversation and significant tasks. Aggressively summarize older tasks, preserve context for recent ones.
+- **MASTER_CLAUDE.md**: Comprehensive development standards and philosophy
+- **`.claude/PRODUCTPLAN.md`**: Product planning artifact sequence
+- **`.claude/docs/`**: Language-specific development guides
+- **`.pre-commit-config.yaml`**: Detailed hook configuration
+- **`pyproject.toml`**: Dependency and tool specifications
