@@ -83,6 +83,15 @@ ALWAYS find root cause - NEVER fix symptoms or add workarounds
 - ALWAYS test after each change
 - If first fix fails, STOP and re-analyze
 
+### YOUR THOUGHT PROCESS WHEN TESTS FAILED:
+1. READ THE TEST CAREFULLY - WHAT BEHAVIOR IS IT PROTECTING?
+2. READ YOUR CHANGES - WHAT DID YOU ACTUALLY CHANGE?
+3. UNDERSTAND THE CONNECTION - WHY DID YOUR CHANGE BREAK THIS TEST?
+4. DECIDE:
+  - IF THE OLD BEHAVIOR IS OBSOLETE → UPDATE/DELETE THE TEST
+  - IF THE TEST CAUGHT A REAL BUG → FIX YOUR CODE
+  - IF YOU'RE UNSURE → STOP AND ASK
+
 ## Version Control
 - Use feature branches (fix/, feat/, chore/)
 - Make atomic commits: type(scope): description
